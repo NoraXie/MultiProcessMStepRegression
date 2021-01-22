@@ -467,12 +467,12 @@ Fitting a model
 
 #### Returns  
 
-in_vars : list
-All variables to be picked up by model.The order in list is same with the order of to be added
+in_vars : list  
+All variables to be picked up by model.The order in list is same with the order of to be added  
     
-clf_final : statsmodels.genmod.generalized_linear_model.GLMResultsWrapper
-A final step-wise model
+clf_final : statsmodels.genmod.generalized_linear_model.GLMResultsWrapper  
+A final step-wise model  
  
-dr : dict
-deletion reason.It\`s format is {'var_name':([...],[...])}
-Every value in dr contains a tuple including two elements.The first element is reason in Chinese and the second in English.Every element is a list and record all deletion reason of variable(matching key).Some features should be added into model manually,if a list corresponding these features has no any element.
+dr : dict  
+deletion reason.It\`s format is {'var_name':([...],[...])}  
+Every value in dr contains a tuple including two elements.The first element is reason in Chinese and the second in English.Every element is a list and record all deletion reason of variable(matching key).Some features should be added into model manually,if a list corresponding these features has no any element.  
