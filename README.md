@@ -470,7 +470,7 @@ Fitting a model
 in_vars : list
 All variables to be picked up by model.The order in list is same with the order of to be added
     
-    clf_final : statsmodels.genmod.generalized_linear_model.GLMResultsWrapper
+clf_final : statsmodels.genmod.generalized_linear_model.GLMResultsWrapper
 A final step-wise model
  
 dr : dict
