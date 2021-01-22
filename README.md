@@ -1,24 +1,19 @@
 # MutliProcessMStepRegression
 # 功能描述（Function Description）
 一个python版本的逐步回归，提供了逐步逻辑回归和逐步线性回归
-
 在添加特征和删除特征时使用多进程来并行计算来决定每个特征是否应该加入或删除模型
-
 支持多进程,Windows系统的多进程版本也被支持
-
+ 
 A step-wise regression with python.It has step-wise logstic regression and step-wise linear regression.
-
 It uses multiprocessing when deciding to add or remove features.
-
 It works with multi-processing.Supporting Windows system multi-processing too.
-
-
-# 使用方法（usage）:
-```
+ 
+# 使用方法(Usage):
+``` 
 import MutliProcessMStepRegression as mpmr
 from sklearn.datasets import make_classification,make_regression
 import pandas as pd
-
+ 
 def get_X_y(data_type):
     if data_type == 'logistic':
         #含有信息的变量个数：4个
@@ -89,7 +84,7 @@ def test_logit(X,y):
     in_vars,clf_final,dr = lr.fit()
     return in_vars,clf_final,dr
     
-
+ 
 def test_linear(X,y):
  #    从结果可以看出：
  #    选出的变量来自有信息量的变量
@@ -120,7 +115,7 @@ def test_linear(X,y):
     lr  =  mpmr.LinearReg(X,y,iter_num=20,max_pvalue_limit=0.1,logger_file_EN='c:/temp/mstep_en.log',logger_file_CH='c:/temp/mstep_ch.log')
     in_vars,clf_final,dr = lr.fit()
     return in_vars,clf_final,dr
-
+ 
 #在windows中必须使用__main__才能使多进程被执行
 #In windows,must use __main__ to make multi-processing running
 if __name__ == '__main__':    
@@ -129,113 +124,71 @@ if __name__ == '__main__':
     
     X_linear, y_linear = get_X_y('linear')
     in_vars_linear,clf_final_linear,dr_linear = test_linear(X_linear,y_linear)
- ```
-# 文档，API（Document,API）
+```
+
+# 文档和API（Document and API）
 class LogisticReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)
    	LogisticReg(X, y, fit_weight=None, measure='ks', measure_weight=None, kw_measure_args=None, max_pvalue_limit=0.05, max_vif_limit=3, max_corr_limit=0.6, coef_sign=None, iter_num=20, kw_algorithm_class_args=None, n_core=None, logger_file_CH=None, logger_file_EN=None)
  
 ## 中文版文档(Document in English is in the next.）
 MutliProcessMStepRegression.LogisticReg:多进程逐步逻辑回归，其底层的逻辑回归算法使用的是statsmodels.genmod.generalized_linear_model.GLM。
-
 每一次向前添加过程中都会使用多进程来同时遍历多个解释变量，然后选取其中符合使用者设定的条件且能给逻辑回归带来最大性能提升的解释变量加入到模型中，如果所有变量都不能在满足使用者设置条件的前提下提升模型性能，则此次添加过程不加入任何变量。
-
 每一次的向后删除过程中也使用与向前添加过程同样的原则来决定删除哪个变量。
-
 在添加过程中模型性能有提升，但是部分条件不被满足，此时会额外触发一轮向后删除的过程，如果删除的变量与正要添加的变量为同一个，则此变量不被加入，添加流程结束。如果删除的变量与正要添加的变量不是同一个，则添加当前的变量，并将需要删除的变量从当前选中变量列表中排除。额外触发的向后删除过程与正常的向后删除过程的流程一致。
-
 在建模结束后，会将没有入选的解释变量分别加入到现有模型变量中，通过重新建模，会给出一个准确的没有入选该变量的原因。
  
 支持的功能点如下：
-
 1.支持双向逐步回归(Step_Wise)
-
 2.支持多进程，在每步增加变量或删除变量时，使用多进程来遍历每个候选变量。Windows系统也支持多进程。
-
 3.支持使用者指定的指标来作为变量添加或删除的依据，而不是使用AIC或BIC，在处理不平衡数据时可以让使用者选择衡量不平衡数据的指标
-
 4.支持使用者指定P-VALUE的阈值，如果超过该阈值，即使指标有提升，也不会被加入到变量中
-
 5.支持使用者指定VIF的阈值，如果超过该阈值，即使指标有提升，也不会被加入到变量中
-
 6.支持使用者指定相关系数的阈值，如果超过该阈值，即使指标有提升，也不会被加入到变量中
-
 7.支持使用者指定回归系数的正负号，在某些业务中，有些特征有明显的业务含义，例如WOE转换后的数据，就会要求回归系数均为正或均为负，加入对系数正负号的限制，如果回归系数不满足符号要求，则当前变量不会被加入到变量中
-
 8.上述4，5，6，7均在逐步回归中完成，挑选变量的同时校验各类阈值与符号
-
 9.会给出每一个没有入模变量被剔除的原因，如加入后指标下降，P-VALUE超出指定阈值，正负号与使用者的预期不符等等。
-
 10.支持中英文双语的日志，会将逐步回归中的每一轮迭代的情况记录到中文日志和英文日志中
-
  
 注意：因为该类会将数据X和y作为该类一个实例的属性，所以实例会比较大，因此非必要时，尽量不要保存MutliProcessMStepRegression.LogisticReg的实例。而是保存其返回的模型和删除原因等信息。
-
  
  
 Parameters    
-```---------------------```
-
+----------
 X:DataFrame
 features
-
  
 y:Series
-
 target
-
  
 fit_weight:Series
-
 长度与样本量相同，为训练模型时的weight，如果取值为None（默认），则认为各个样本的训练权重相同。不要与模型性能评价的measure_weight混淆，二者可以一样也可以不一样，需要看使用者样本的抽样设计。例如：在建模时为了减少大类样本的影响，可以提高小类样本的权重，而在计算KS或者ROC_AUC等指标时，又将大类样本与小类样本的权重还原回实际样本的权重值，这么做是由于逻辑回归的损失函数是大类样本敏感的，所以需要通过训练权重来人为的做调整。而KS或ROC_AUC等指标的计算方式不会受到不平衡样本的影响，因此无需调整衡量指标的样本权重，除非使用者认为样本之间损失的惩罚力度不一样。
-
 注：在MutliProcessMStepRegression.LogisticReg中即使使用KS或ROC_AUC等衡量非平衡数据的指标来挑选特征，但是其底层还是标准的逻辑回归算法，因此MutliProcessMStepRegression.LogisticReg仍是大类样本敏感的。
-
  
 measure:str ks(默认) | accuracy | roc_auc | balanced_accuracy | average_precision
-
 计算逻辑回归模型性能的函数，y_true,y_hat和measure_weight会被自动传递进指定measure函数中，其余参数会由kw_measure_args传入
-
  
 measure_weight:Series
-
 长度与样本量相同，为度量模型性能时的weight，如果取值为None（默认），则认为各个样本的度量权重相同。
-
 参看 fit_weight
-
  
 kw_measure_args:dict | None(默认)
-
 measure函数除y_true,y_hat,measure_weight外，其余需要传入的参数都写入该dict里。None意味着不需要传入额外的参数
-
  
 max_pvalue_limit:float
-
 允许的P-VALUE的最大值。0.05（默认）
-
  
 max_vif_limit:float
-
-
 允许的VIF的最大值。3（默认）
-
-
  
 max_corr_limit:float
-
 允许的相关系数的最大值。0.6（默认）
-
  
 coef_sign:'+','-',dict,None（默认）
-
     如果知道X对y的影响关系--正相关或负相关，则可以对变量的符号进行约束。
-    
     '+':所有X的系数都应为正数
-    
     '-':所有X的系数都应为负数
-    
     dict:格式如{'x_name1':'+','x_name2':'-'}，将已知的X的系数符号配置在dict中，以对回归结果中X的系数的正负号进行约束。没有被包含在dict中的变量，不对其系数进行约束
     None:所有X的系数的正负号都不被约束
-    
     
 iter_num:int 
 挑选变量的轮数，默认为20。np.inf表示不限制轮数，当变量很多时，需要较长的运行时间。如果所有的变量都已经被选入到模型，或者不能通过增加或删除变量来进一步提升模型性能，则实际迭代轮数可能小于iter_num。每一轮挑选变量包含如下步骤：1.尝试将每一个还未被加入到模型中的变量加入到当前模型中，选出一个满足使用者设置的条件且使模型性能提升最多的变量加入到模型中。2.在当前模型中的每一个变量尝试删除，选出一个满足使用者设置的条件且使模型性能提升最多的变量移出模型。完成1，2两步即为完成一轮迭代。如果步骤1和2均未能挑选出变量，则迭代提前终止，无论是否达到了iter_num。
@@ -335,3 +288,4 @@ A log file name where log for step-wise procedure is recorded in Chinese.If None
  
 logger_file_EN:str
 A log file name where log for step-wise procedure is recorded in English.If None(default),not recording English log.
+ 
