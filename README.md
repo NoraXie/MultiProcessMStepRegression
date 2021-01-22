@@ -220,7 +220,7 @@ logger_file_EN:str
 in_vars : list  
 所有的入模变量列表，列表中的顺序即为加入时的顺序  
     
-clf_final : statsmodels.regression.linear_model.RegressionResultsWrapper
+clf_final : statsmodels.regression.linear_model.RegressionResultsWrapper  
 最终的逐步回归的模型  
     
 dr : dict  
@@ -388,7 +388,7 @@ Fitting a model
 in_vars : list  
 All variables to be picked up by model.The order in list is same with the order of to be added  
     
-clf_final :statsmodels.regression.linear_model.RegressionResultsWrapper
+clf_final :statsmodels.regression.linear_model.RegressionResultsWrapper  
 A final step-wise model  
  
 dr : dict  
