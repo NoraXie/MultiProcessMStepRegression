@@ -148,15 +148,16 @@ if __name__ == '__main__':
     X_linear, y_linear = get_X_y('linear')
     in_vars_linear,clf_final_linear,dr_linear = test_linear(X_linear,y_linear)
 ```
-# 中文文档和API(Document in English is in the next.）  
-
-## class LinearReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
+# 中文文档和API(Document and API in English is in the next.）  
+## 类
+## class MutliProcessMStepRegression.LinearReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
 多进程逐步线性回归，其底层的线性回归算法使用的是statsmodels.api.OLS或statsmodels.api.WLS，依据用户是否使用训练样本权重来绝定。  
 每一次向前添加过程中都会使用多进程来同时遍历多个解释变量，然后选取其中符合使用者设定的条件且能给线性回归带来最大性能提升的解释变量加入到模型中，如果所有变量都不能在满足使用者设置条件的前提下提升模型性能，则此次添加过程不加入任何变量。  
 每一次的向后删除过程中也使用与向前添加过程同样的原则来决定删除哪个变量。  
 在添加过程中模型性能有提升，但是部分条件不被满足，此时会额外触发一轮向后删除的过程，如果删除的变量与正要添加的变量为同一个，则此变量不被加入，添加流程结束。如果删除的变量与正要添加的变量不是同一个，则添加当前的变量，并将需要删除的变量从当前选中变量列表中排除。额外触发的向后删除过程与正常的向后删除过程的流程一致。  
 在建模结束后，会将没有入选的解释变量分别加入到现有模型变量中，通过重新建模，会给出一个准确的没有入选该变量的原因。  
 注意：因为该类会将数据X和y作为该类一个实例的属性，所以实例会比较大，因此非必要时，尽量不要保存MutliProcessMStepRegression.LinearReg的实例。而是保存其返回的模型和删除原因等信息。  
+### __init__函数
 ### LinearReg(X, y, fit_weight=None, measure='r2', measure_weight=None, kw_measure_args=None, max_pvalue_limit=0.05, max_vif_limit=3, max_corr_limit=0.6, coef_sign=None, iter_num=20, kw_algorithm_class_args=None, n_core=None, logger_file_CH=None, logger_file_EN=None)  
     
 #### Parameters    
@@ -210,9 +211,111 @@ logger_file_CH:str
 logger_file_EN:str  
 使用者指定的用于记录逐步回归过程的文件名，日志为英文日志。如果为None（默认）则不记录英文日志  
 
-# Document and API in English  
+### 方法
+### LinearReg.fit(self) 
+训练模型
+ 
+#### Returns  
 
-## class LinearReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
+in_vars : list  
+所有的入模变量列表，列表中的顺序即为加入时的顺序  
+    
+clf_final : statsmodels.regression.linear_model.RegressionResultsWrapper
+最终的逐步回归的模型  
+    
+dr : dict  
+删除原因，其结构为:{'变量名称':([...],[...])}  
+每个dr的value是一个含有两个元素的tuple，第一个为中文给出的删除原因，第二个为英文给出的删除原因。每个元素是一个list，记录了对应变量(key)的所有删除原因。如果某一个特征对应的list里没有任何元素，则应考虑将这个特征手工的加入到模型中去。 
+
+## 类  
+## class MutliProcessMStepRegression.LogisticReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
+多进程逐步逻辑回归，其底层的逻辑回归算法使用的是statsmodels.genmod.generalized_linear_model.GLM。  
+每一次向前添加过程中都会使用多进程来同时遍历多个解释变量，然后选取其中符合使用者设定的条件且能给逻辑回归带来最大性能提升的解释变量加入到模型中，如果所有变量都不能在满足使用者设置条件的前提下提升模型性能，则此次添加过程不加入任何变量。  
+每一次的向后删除过程中也使用与向前添加过程同样的原则来决定删除哪个变量。  
+在添加过程中模型性能有提升，但是部分条件不被满足，此时会额外触发一轮向后删除的过程，如果删除的变量与正要添加的变量为同一个，则此变量不被加入，添加流程结束。如果删除的变量与正要添加的变量不是同一个，则添加当前的变量，并将需要删除的变量从当前选中变量列表中排除。额外触发的向后删除过程与正常的向后删除过程的流程一致。  
+在建模结束后，会将没有入选的解释变量分别加入到现有模型变量中，通过重新建模，会给出一个准确的没有入选该变量的原因。  
+注意：因为该类会将数据X和y作为该类一个实例的属性，所以实例会比较大，因此非必要时，尽量不要保存MutliProcessMStepRegression.LogisticReg的实例。而是保存其返回的模型和删除原因等信息。  
+
+### __init__ 函数
+### LogisticReg(X, y, fit_weight=None, measure='ks', measure_weight=None, kw_measure_args=None, max_pvalue_limit=0.05, max_vif_limit=3, max_corr_limit=0.6, coef_sign=None, iter_num=20, kw_algorithm_class_args=None, n_core=None, logger_file_CH=None, logger_file_EN=None)  
+
+
+#### Parameters  
+X:DataFrame  
+features  
+ 
+y:Series  
+target  
+ 
+fit_weight:Series  
+长度与样本量相同，为训练模型时的weight，如果取值为None（默认），则认为各个样本的训练权重相同。不要与模型性能评价的measure_weight混淆，二者可以一样也可以不一样，需要看使用者样本的抽样设计。例如：在建模时为了减少大类样本的影响，可以提高小类样本的权重，而在计算KS或者ROC_AUC等指标时，又将大类样本与小类样本的权重还原回实际样本的权重值，这么做是由于逻辑回归的损失函数是大类样本敏感的，所以需要通过训练权重来人为的做调整。而KS或ROC_AUC等指标的计算方式不会受到不平衡样本的影响，因此无需调整衡量指标的样本权重，除非使用者认为样本之间损失的惩罚力度不一样。  
+注：在MutliProcessMStepRegression.LogisticReg中即使使用KS或ROC_AUC等衡量非平衡数据的指标来挑选特征，但是其底层还是标准的逻辑回归算法，因此MutliProcessMStepRegression.LogisticReg仍是大类样本敏感的。  
+ 
+measure:str ks(默认) | accuracy | roc_auc | balanced_accuracy | average_precision  
+计算逻辑回归模型性能的函数，y_true,y_hat和measure_weight会被自动传递进指定measure函数中，其余参数会由kw_measure_args传入  
+ 
+measure_weight:Series  
+长度与样本量相同，为度量模型性能时的weight，如果取值为None（默认），则认为各个样本的度量权重相同。  
+参看 fit_weight  
+ 
+kw_measure_args:dict | None(默认)  
+measure函数除y_true,y_hat,measure_weight外，其余需要传入的参数都写入该dict里。None意味着不需要传入额外的参数  
+ 
+max_pvalue_limit:float  
+允许的P-VALUE的最大值。0.05（默认）  
+ 
+max_vif_limit:float  
+允许的VIF的最大值。3（默认）  
+ 
+max_corr_limit:float  
+允许的相关系数的最大值。0.6（默认）  
+ 
+coef_sign:'+','-',dict,None（默认）  
+    如果知道X对y的影响关系--正相关或负相关，则可以对变量的符号进行约束。  
+    '+':所有X的系数都应为正数  
+    '-':所有X的系数都应为负数  
+    dict:格式如{'x_name1':'+','x_name2':'-'}，将已知的X的系数符号配置在dict中，以对回归结果中X的系数的正负号进行约束。没有被包含在dict中的变量，不对其系数进行约束  
+    None:所有X的系数的正负号都不被约束  
+    
+iter_num:int   
+挑选变量的轮数，默认为20。np.inf表示不限制轮数，当变量很多时，需要较长的运行时间。如果所有的变量都已经被选入到模型，或者不能通过增加或删除变量来进一步提升模型性能，则实际迭代轮数可能小于iter_num。每一轮挑选变量包含如下步骤：1.尝试将每一个还未被加入到模型中的变量加入到当前模型中，选出一个满足使用者设置的条件且使模型性能提升最多的变量加入到模型中。2.在当前模型中的每一个变量尝试删除，选出一个满足使用者设置的条件且使模型性能提升最多的变量移出模型。完成1，2两步即为完成一轮迭代。如果步骤1和2均未能挑选出变量，则迭代提前终止，无论是否达到了iter_num。  
+    
+kw_algorithm_class_args:dict  
+除X，y，fit_weight外，其它需要传入逻辑回归算法（statsmodels.genmod.generalized_linear_model.GLM）的参数。  
+注意：在statsmodels.genmod.generalized_linear_model.GLM中的y和X分别被叫做endog和exog  
+ 
+n_core:int | float | None  
+CPU的进程数。如果是int类型，则为使用CPU的进程数。如果是float类型，则为CPU全部进程数的百分比所对应的进程数（向上取整）。如果为None，则为使用全部CPU进程数-1  
+ 
+logger_file_CH:str  
+使用者指定的用于记录逐步回归过程的文件名，日志为中文日志。如果为None（默认）则不记录中文日志  
+ 
+logger_file_EN:str  
+使用者指定的用于记录逐步回归过程的文件名，日志为英文日志。如果为None（默认）则不记录英文日志  
+
+### 方法
+### LogisticReg.fit(self)   
+
+训练模型
+ 
+ 
+#### Returns  
+
+in_vars : list  
+所有的入模变量列表，列表中的顺序即为加入时的顺序  
+    
+clf_final : statsmodels.genmod.generalized_linear_model.GLMResultsWrapper  
+最终的逐步回归的模型  
+    
+dr : dict  
+删除原因，其结构为:{'变量名称':([...],[...])}
+每个dr的value是一个含有两个元素的tuple，第一个为中文给出的删除原因，第二个为英文给出的删除原因。每个元素是一个list，记录了对应变量(key)的所有删除原因。如果某一个特征对应的list里没有任何元素，则应考虑将这个特征手工的加入到模型中去。  
+ 
+ 
+
+# Document and API in English  
+## class  
+## class MutliProcessMStepRegression.LinearReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
 
 A Step-Wise Linear Regression handling with multi-processing.It bases on statsmodels.api.OLS or statsmodels.api.WLS supplying a linear regression algorithm.Which algorithm should be used depends on the setting of train sample weight.   
 In adding feature process,multi-processing is used to traversal several features concurrently.The feature which meets the conditions which the user set and get a max lift on measure index is added in the model.If any feature can\`t improve the performance of model undering the conditions set by user ,no feature is added in current iteration.   
@@ -220,7 +323,7 @@ The removing feature process has same policy with adding feature process to deci
 When adding process, if there is improving on performance of model but some conditions user set are missed,a additional removing process will start to run.If the feature to remove is same with the feature to add,the feature will not be added and the adding process is over.If They are not same,the feature to add is added in and the feature to remove is excluded from current list in which the picked features stay.The additional removing process has same procedure with removing process.   
 When modeling is compeleted,the features not picked up will respectively be added in picked features list. And then by rebuilding model with those features,a exact deletion reasons will return.   
 Note:As X and y is a property in a instance of MutliProcessMStepRegression.LinearReg class,so that instance will be very large.Saving that instance is not recommended instead of saving the returned model and remove reasons.  
- 
+### __init__ function 
 ### LinearReg(X, y, fit_weight=None, measure='r2', measure_weight=None, kw_measure_args=None, max_pvalue_limit=0.05, max_vif_limit=3, max_corr_limit=0.6, coef_sign=None, iter_num=20, kw_algorithm_class_args=None, n_core=None, logger_file_CH=None, logger_file_EN=None)    
     
 #### Parameters  
@@ -234,7 +337,7 @@ target
 fit_weight:Series  
 The length of fit_weight is same with length of y.The fit_weight is for trainning data.If None(default),every sample has a same trainning weight and statsmodels.api.OLS is used as base linear algorithm.If not None,statsmodels.api.WLS is used as base linear algorithm.In linear regression,the goal of setting weight is for getting a stable model with Heteroscedasticity.  
  
-measure:str ks(默认) | accuracy | roc_auc | balanced_accuracy | average_precision  
+measure:str r2(默认) | explained_variance_score | max_error   
 Performance evaluate function.The y_true,y_hat and measure_weight will be put into measure function automatically and the other parameters will be put into measure function with kw_measure_args  
  
 measure_weight:Series  
@@ -276,3 +379,100 @@ A log file name where log for step-wise procedure is recorded in Chinese.If None
  
 logger_file_EN:str  
 A log file name where log for step-wise procedure is recorded in English.If None(default),not recording English log.  
+### method 
+### LinearReg.fit(self)  
+Fitting a model  
+
+#### Returns  
+
+in_vars : list  
+All variables to be picked up by model.The order in list is same with the order of to be added  
+    
+clf_final :statsmodels.regression.linear_model.RegressionResultsWrapper
+A final step-wise model  
+ 
+dr : dict  
+deletion reason.It\`s format is {'var_name':([...],[...])}  
+Every value in dr contains a tuple including two elements.The first element is reason in Chinese and the second in English.Every element is a list and record all deletion reason of variable(matching key).Some features should be added into model manually,if a list corresponding these features has no any element.  
+
+## class  
+## class MutliProcessMStepRegression.LogisticReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
+MutliProcessMStepRegression.LogisticReg:A Step-Wise Logistic Regression handling with multi-processing.It bases on statsmodels.genmod.generalized_linear_model.GLM supplying a logistic regression algorithm  
+In adding feature process,multi-processing is used to traversal several features concurrently.The feature which meets the conditions which the user set and get a max lift on measure index is added in the model.If any feature can\`t improve the performance of model undering the conditions set by user ,no feature is added in current iteration. 
+The removing feature process has same policy with adding feature process to decide which feature should be removed.
+When adding process, if there is improving on performance of model but some conditions user set are missed,a additional removing process will start to run.If the feature to remove is same with the feature to add,the feature will not be added and the adding process is over.If They are not same,the feature to add is added in and the feature to remove is excluded from current list in which the picked features stay.The additional removing process has same procedure with removing process. 
+When modeling is compeleted,the features not picked up will respectively be added in picked features list. And then by rebuilding model with those features,a exact deletion reasons will return. 
+Note:As X and y is a property in a instance of MutliProcessMStepRegression.LogisticReg class,so that instance will be very large.Saving that instance is not recommended instead of saving the returned model and remove reasons.
+
+### __init__ function
+### LogisticReg(X, y, fit_weight=None, measure='ks', measure_weight=None, kw_measure_args=None, max_pvalue_limit=0.05, max_vif_limit=3, max_corr_limit=0.6, coef_sign=None, iter_num=20, kw_algorithm_class_args=None, n_core=None, logger_file_CH=None, logger_file_EN=None)
+
+#### Parameters  
+X:DataFrame  
+features  
+ 
+y:Series  
+target  
+ 
+fit_weight:Series  
+The length of fit_weight is same with length of y.The fit_weight is for trainning data.If None(default),every sample has a same trainning weight.Don\`t confuse fit_weight with measure_weight(mentioned below) that is for measuring model.It depends on user\`s design on sample whether fit_weight is same with measure_weight or not.For example,for reducing effect from large class sample,it\`s a good way to improve weights of small class sample when trainning model but the weight between large class sample and small class sample returns back to original weight value when measuring with some index like KS or ROC_AUC.Why doing like this is that the lost function of regression is large class sensitive.So the user need adjust sample weights.Some index like KS or ROC_AUC,their calculate way is non-sensitive in unbalanced sample situation,so the user need not adjust sample weights unless the user thinks that the loss penalty between samples is different.  
+note:Although the user set measure='KS' or 'ROC_AUC' to measure performance and pick features,but the MutliProcessMStepRegression.LogisticReg is still large class sensitive,due to the base algorithm is standard logistic regression yet.  
+ 
+measure:str ks(默认) | accuracy | roc_auc | balanced_accuracy | average_precision  
+Performance evaluate function.The y_true,y_hat and measure_weight will be put into measure function automatically and the other parameters will be put into measure function with kw_measure_args  
+ 
+measure_weight:Series  
+The length of measure_weight is same with length of y.The measure_weight is for measuring function.If None(default),every sample has a same measuring weight.  
+See also fit_weight  
+ 
+kw_measure_args:dict | None(默认)  
+Except y_true,y_hat and measure_weight,the other parameters need be put in kw_measure_args to deliver into measure function.  
+None means that no other parameters delivers into measure function.  
+ 
+max_pvalue_limit:float  
+The max P-VALUE limit.0.05(default)  
+ 
+max_vif_limit:float
+The max VIF limit.3(default)  
+ 
+max_corr_limit:float
+The max coefficient of correlation limit. 0.6(default)  
+ 
+coef_sign:'+','-',dict,None（默认）  
+If the user have a priori knowledge on relation between X and y,like positive correlation or negtive correlation,user can make a constraint restriction on sign of resression coefficient by this parameter.  
+'+':all signs of resression coefficients are positive  
+'-':all signs of resression coefficients are negtive  
+dict:the format is as {'x_name1':'+','x_name2':'-'}.Put coefficient and coefficient\`s sign on which you have a priori knowledge into a dict and then constraint these signs that are in this dict. The coefficients not included in this dict will not be constrainted.  
+None:all coefficients are not constrainted.  
+    
+iter_num:int  
+The iteration num for picking features.Default is 20.When np.inf,no limit to iteration num,if features are many,then the running time is long.If all features are already picked in model or no imporve on perfermance by adding/removing any feature,the actual iteration num should be samller than iter_num.The steps inclueed in every iteration is:1.Try adding feature which is not added in current model yet and then pick up one feature that makes most promotion for performance of model with satisfying user\`s setting. 2.Try removing feature and then remove out one feature that makes most promotion for performance of model with satisfying user\`s setting.It is means finshing one time iteration that step 1 and step 2 is completed.If all step 1 and step 2 can\`t pick up any feature then iteration is pre-terminated,no matter whether iter_num is reached.  
+    
+kw_algorithm_class_args:dict  
+Except X，y，fit_weight,the other parameters that are delivered into logistic regression algorithm is in kw_algorithm_class_args  
+Note:y,X is called endog and exog in statsmodels.genmod.generalized_linear_model.GLM  
+ 
+n_core:int | float | None  
+Count of CPU processing.If int,user point the count.If float,the count is as percentage of all count transfered to int(ceil).If None(default),all count of CPU processing -1.  
+ 
+logger_file_CH:str  
+A log file name where log for step-wise procedure is recorded in Chinese.If None(default),not recording Chinese log.  
+ 
+logger_file_EN:str  
+A log file name where log for step-wise procedure is recorded in English.If None(default),not recording English log.  
+ 
+### method 
+### LogisticReg.fit(self)  
+Fitting a model  
+
+#### Returns  
+
+in_vars : list
+All variables to be picked up by model.The order in list is same with the order of to be added
+    
+    clf_final : statsmodels.genmod.generalized_linear_model.GLMResultsWrapper
+A final step-wise model
+ 
+dr : dict
+deletion reason.It\`s format is {'var_name':([...],[...])}
+Every value in dr contains a tuple including two elements.The first element is reason in Chinese and the second in English.Every element is a list and record all deletion reason of variable(matching key).Some features should be added into model manually,if a list corresponding these features has no any element.
