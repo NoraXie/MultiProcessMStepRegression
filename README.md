@@ -337,14 +337,14 @@ target
 fit_weight:Series  
 The length of fit_weight is same with length of y.The fit_weight is for trainning data.If None(default),every sample has a same trainning weight and statsmodels.api.OLS is used as base linear algorithm.If not None,statsmodels.api.WLS is used as base linear algorithm.In linear regression,the goal of setting weight is for getting a stable model with Heteroscedasticity.  
  
-measure:str r2(默认) | explained_variance_score | max_error   
+measure:str r2(default) | explained_variance_score | max_error   
 Performance evaluate function.The y_true,y_hat and measure_weight will be put into measure function automatically and the other parameters will be put into measure function with kw_measure_args  
  
 measure_weight:Series  
 The length of measure_weight is same with length of y.The measure_weight is for measuring function.If None(default),every sample has a same measuring weight.  
 See also fit_weight  
  
-kw_measure_args:dict | None(默认)  
+kw_measure_args:dict | None(default)  
 Except y_true,y_hat and measure_weight,the other parameters need be put in kw_measure_args to deliver into measure function.  
 None means that no other parameters delivers into measure function.  
  
@@ -357,7 +357,7 @@ The max VIF limit.3(default)
 max_corr_limit:float  
 The max coefficient of correlation limit.0.6(default)  
  
-coef_sign:'+','-',dict,None（默认）  
+coef_sign:'+','-',dict,None（default）  
 If the user have a priori knowledge on relation between X and y,like positive correlation or negtive correlation,user can make a constraint restriction on sign of resression coefficient by this parameter.  
 '+':all signs of resression coefficients are positive  
 '-':all signs of resression coefficients are negtive  
@@ -418,14 +418,14 @@ fit_weight:Series
 The length of fit_weight is same with length of y.The fit_weight is for trainning data.If None(default),every sample has a same trainning weight.Don\`t confuse fit_weight with measure_weight(mentioned below) that is for measuring model.It depends on user\`s design on sample whether fit_weight is same with measure_weight or not.For example,for reducing effect from large class sample,it\`s a good way to improve weights of small class sample when trainning model but the weight between large class sample and small class sample returns back to original weight value when measuring with some index like KS or ROC_AUC.Why doing like this is that the lost function of regression is large class sensitive.So the user need adjust sample weights.Some index like KS or ROC_AUC,their calculate way is non-sensitive in unbalanced sample situation,so the user need not adjust sample weights unless the user thinks that the loss penalty between samples is different.  
 note:Although the user set measure='KS' or 'ROC_AUC' to measure performance and pick features,but the MutliProcessMStepRegression.LogisticReg is still large class sensitive,due to the base algorithm is standard logistic regression yet.  
  
-measure:str ks(默认) | accuracy | roc_auc | balanced_accuracy | average_precision  
+measure:str ks(default) | accuracy | roc_auc | balanced_accuracy | average_precision  
 Performance evaluate function.The y_true,y_hat and measure_weight will be put into measure function automatically and the other parameters will be put into measure function with kw_measure_args  
  
 measure_weight:Series  
 The length of measure_weight is same with length of y.The measure_weight is for measuring function.If None(default),every sample has a same measuring weight.  
 See also fit_weight  
  
-kw_measure_args:dict | None(默认)  
+kw_measure_args:dict | None(default)  
 Except y_true,y_hat and measure_weight,the other parameters need be put in kw_measure_args to deliver into measure function.  
 None means that no other parameters delivers into measure function.  
  
@@ -438,7 +438,7 @@ The max VIF limit.3(default)
 max_corr_limit:float
 The max coefficient of correlation limit. 0.6(default)  
  
-coef_sign:'+','-',dict,None（默认）  
+coef_sign:'+','-',dict,None（default）  
 If the user have a priori knowledge on relation between X and y,like positive correlation or negtive correlation,user can make a constraint restriction on sign of resression coefficient by this parameter.  
 '+':all signs of resression coefficients are positive  
 '-':all signs of resression coefficients are negtive  
