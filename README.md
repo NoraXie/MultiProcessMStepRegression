@@ -33,7 +33,7 @@ It works with multi-processing.Supporting Windows system multi-processing too.
  
 # 使用说明 （Usage）:
 ```
-import MutliProcessMStepRegression as mpmr
+import MultiProcessMStepRegression as mpmr
 from sklearn.datasets import make_classification,make_regression
 import pandas as pd
  
@@ -150,13 +150,13 @@ if __name__ == '__main__':
 ```
 # 中文文档和API(Document and API in English is in the next.）  
 ## 类
-## class MutliProcessMStepRegression.LinearReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
+## class MultiProcessMStepRegression.LinearReg(MultiProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
 多进程逐步线性回归，其底层的线性回归算法使用的是statsmodels.api.OLS或statsmodels.api.WLS，依据用户是否使用训练样本权重来绝定。  
 每一次向前添加过程中都会使用多进程来同时遍历多个解释变量，然后选取其中符合使用者设定的条件且能给线性回归带来最大性能提升的解释变量加入到模型中，如果所有变量都不能在满足使用者设置条件的前提下提升模型性能，则此次添加过程不加入任何变量。  
 每一次的向后删除过程中也使用与向前添加过程同样的原则来决定删除哪个变量。  
 在添加过程中模型性能有提升，但是部分条件不被满足，此时会额外触发一轮向后删除的过程，如果删除的变量与正要添加的变量为同一个，则此变量不被加入，添加流程结束。如果删除的变量与正要添加的变量不是同一个，则添加当前的变量，并将需要删除的变量从当前选中变量列表中排除。额外触发的向后删除过程与正常的向后删除过程的流程一致。  
 在建模结束后，会将没有入选的解释变量分别加入到现有模型变量中，通过重新建模，会给出一个准确的没有入选该变量的原因。  
-注意：因为该类会将数据X和y作为该类一个实例的属性，所以实例会比较大，因此非必要时，尽量不要保存MutliProcessMStepRegression.LinearReg的实例。而是保存其返回的模型和删除原因等信息。  
+注意：因为该类会将数据X和y作为该类一个实例的属性，所以实例会比较大，因此非必要时，尽量不要保存MultiProcessMStepRegression.LinearReg的实例。而是保存其返回的模型和删除原因等信息。  
 ### __init__函数
 ### LinearReg(X, y, fit_weight=None, measure='r2', measure_weight=None, kw_measure_args=None, max_pvalue_limit=0.05, max_vif_limit=3, max_corr_limit=0.6, coef_sign=None, iter_num=20, kw_algorithm_class_args=None, n_core=None, logger_file_CH=None, logger_file_EN=None)  
     
@@ -228,13 +228,13 @@ dr : dict
 每个dr的value是一个含有两个元素的tuple，第一个为中文给出的删除原因，第二个为英文给出的删除原因。每个元素是一个list，记录了对应变量(key)的所有删除原因。如果某一个特征对应的list里没有任何元素，则应考虑将这个特征手工的加入到模型中去。 
 
 ## 类  
-## class MutliProcessMStepRegression.LogisticReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
+## class MultiProcessMStepRegression.LogisticReg(MultiProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
 多进程逐步逻辑回归，其底层的逻辑回归算法使用的是statsmodels.genmod.generalized_linear_model.GLM。  
 每一次向前添加过程中都会使用多进程来同时遍历多个解释变量，然后选取其中符合使用者设定的条件且能给逻辑回归带来最大性能提升的解释变量加入到模型中，如果所有变量都不能在满足使用者设置条件的前提下提升模型性能，则此次添加过程不加入任何变量。  
 每一次的向后删除过程中也使用与向前添加过程同样的原则来决定删除哪个变量。  
 在添加过程中模型性能有提升，但是部分条件不被满足，此时会额外触发一轮向后删除的过程，如果删除的变量与正要添加的变量为同一个，则此变量不被加入，添加流程结束。如果删除的变量与正要添加的变量不是同一个，则添加当前的变量，并将需要删除的变量从当前选中变量列表中排除。额外触发的向后删除过程与正常的向后删除过程的流程一致。  
 在建模结束后，会将没有入选的解释变量分别加入到现有模型变量中，通过重新建模，会给出一个准确的没有入选该变量的原因。  
-注意：因为该类会将数据X和y作为该类一个实例的属性，所以实例会比较大，因此非必要时，尽量不要保存MutliProcessMStepRegression.LogisticReg的实例。而是保存其返回的模型和删除原因等信息。  
+注意：因为该类会将数据X和y作为该类一个实例的属性，所以实例会比较大，因此非必要时，尽量不要保存MultiProcessMStepRegression.LogisticReg的实例。而是保存其返回的模型和删除原因等信息。  
 
 ### __init__ 函数
 ### LogisticReg(X, y, fit_weight=None, measure='ks', measure_weight=None, kw_measure_args=None, max_pvalue_limit=0.05, max_vif_limit=3, max_corr_limit=0.6, coef_sign=None, iter_num=20, kw_algorithm_class_args=None, n_core=None, logger_file_CH=None, logger_file_EN=None)  
@@ -249,7 +249,7 @@ target
  
 fit_weight:Series  
 长度与样本量相同，为训练模型时的weight，如果取值为None（默认），则认为各个样本的训练权重相同。不要与模型性能评价的measure_weight混淆，二者可以一样也可以不一样，需要看使用者样本的抽样设计。例如：在建模时为了减少大类样本的影响，可以提高小类样本的权重，而在计算KS或者ROC_AUC等指标时，又将大类样本与小类样本的权重还原回实际样本的权重值，这么做是由于逻辑回归的损失函数是大类样本敏感的，所以需要通过训练权重来人为的做调整。而KS或ROC_AUC等指标的计算方式不会受到不平衡样本的影响，因此无需调整衡量指标的样本权重，除非使用者认为样本之间损失的惩罚力度不一样。  
-注：在MutliProcessMStepRegression.LogisticReg中即使使用KS或ROC_AUC等衡量非平衡数据的指标来挑选特征，但是其底层还是标准的逻辑回归算法，因此MutliProcessMStepRegression.LogisticReg仍是大类样本敏感的。  
+注：在MultiProcessMStepRegression.LogisticReg中即使使用KS或ROC_AUC等衡量非平衡数据的指标来挑选特征，但是其底层还是标准的逻辑回归算法，因此MultiProcessMStepRegression.LogisticReg仍是大类样本敏感的。  
  
 measure:str ks(默认) | accuracy | roc_auc | balanced_accuracy | average_precision  
 计算逻辑回归模型性能的函数，y_true,y_hat和measure_weight会被自动传递进指定measure函数中，其余参数会由kw_measure_args传入  
@@ -315,14 +315,14 @@ dr : dict
 
 # Document and API in English  
 ## class  
-## class MutliProcessMStepRegression.LinearReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
+## class MultiProcessMStepRegression.LinearReg(MultiProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
 
 A Step-Wise Linear Regression handling with multi-processing.It bases on statsmodels.api.OLS or statsmodels.api.WLS supplying a linear regression algorithm.Which algorithm should be used depends on the setting of train sample weight.   
 In adding feature process,multi-processing is used to traversal several features concurrently.The feature which meets the conditions which the user set and get a max lift on measure index is added in the model.If any feature can\`t improve the performance of model undering the conditions set by user ,no feature is added in current iteration.   
 The removing feature process has same policy with adding feature process to decide which feature should be removed.  
 When adding process, if there is improving on performance of model but some conditions user set are missed,a additional removing process will start to run.If the feature to remove is same with the feature to add,the feature will not be added and the adding process is over.If They are not same,the feature to add is added in and the feature to remove is excluded from current list in which the picked features stay.The additional removing process has same procedure with removing process.   
 When modeling is compeleted,the features not picked up will respectively be added in picked features list. And then by rebuilding model with those features,a exact deletion reasons will return.   
-Note:As X and y is a property in a instance of MutliProcessMStepRegression.LinearReg class,so that instance will be very large.Saving that instance is not recommended instead of saving the returned model and remove reasons.  
+Note:As X and y is a property in a instance of MultiProcessMStepRegression.LinearReg class,so that instance will be very large.Saving that instance is not recommended instead of saving the returned model and remove reasons.  
 ### __init__ function 
 ### LinearReg(X, y, fit_weight=None, measure='r2', measure_weight=None, kw_measure_args=None, max_pvalue_limit=0.05, max_vif_limit=3, max_corr_limit=0.6, coef_sign=None, iter_num=20, kw_algorithm_class_args=None, n_core=None, logger_file_CH=None, logger_file_EN=None)    
     
@@ -396,13 +396,13 @@ deletion reason.It\`s format is {'var_name':([...],[...])}
 Every value in dr contains a tuple including two elements.The first element is reason in Chinese and the second in English.Every element is a list and record all deletion reason of variable(matching key).Some features should be added into model manually,if a list corresponding these features has no any element.  
 
 ## class  
-## class MutliProcessMStepRegression.LogisticReg(MutliProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
-MutliProcessMStepRegression.LogisticReg:A Step-Wise Logistic Regression handling with multi-processing.It bases on statsmodels.genmod.generalized_linear_model.GLM supplying a logistic regression algorithm  
+## class MultiProcessMStepRegression.LogisticReg(MultiProcessMStepRegression.Reg_Sup_Step_Wise_MP.Regression)  
+MultiProcessMStepRegression.LogisticReg:A Step-Wise Logistic Regression handling with multi-processing.It bases on statsmodels.genmod.generalized_linear_model.GLM supplying a logistic regression algorithm  
 In adding feature process,multi-processing is used to traversal several features concurrently.The feature which meets the conditions which the user set and get a max lift on measure index is added in the model.If any feature can\`t improve the performance of model undering the conditions set by user ,no feature is added in current iteration. 
 The removing feature process has same policy with adding feature process to decide which feature should be removed.
 When adding process, if there is improving on performance of model but some conditions user set are missed,a additional removing process will start to run.If the feature to remove is same with the feature to add,the feature will not be added and the adding process is over.If They are not same,the feature to add is added in and the feature to remove is excluded from current list in which the picked features stay.The additional removing process has same procedure with removing process. 
 When modeling is compeleted,the features not picked up will respectively be added in picked features list. And then by rebuilding model with those features,a exact deletion reasons will return. 
-Note:As X and y is a property in a instance of MutliProcessMStepRegression.LogisticReg class,so that instance will be very large.Saving that instance is not recommended instead of saving the returned model and remove reasons.
+Note:As X and y is a property in a instance of MultiProcessMStepRegression.LogisticReg class,so that instance will be very large.Saving that instance is not recommended instead of saving the returned model and remove reasons.
 
 ### __init__ function
 ### LogisticReg(X, y, fit_weight=None, measure='ks', measure_weight=None, kw_measure_args=None, max_pvalue_limit=0.05, max_vif_limit=3, max_corr_limit=0.6, coef_sign=None, iter_num=20, kw_algorithm_class_args=None, n_core=None, logger_file_CH=None, logger_file_EN=None)
@@ -416,7 +416,7 @@ target
  
 fit_weight:Series  
 The length of fit_weight is same with length of y.The fit_weight is for trainning data.If None(default),every sample has a same trainning weight.Don\`t confuse fit_weight with measure_weight(mentioned below) that is for measuring model.It depends on user\`s design on sample whether fit_weight is same with measure_weight or not.For example,for reducing effect from large class sample,it\`s a good way to improve weights of small class sample when trainning model but the weight between large class sample and small class sample returns back to original weight value when measuring with some index like KS or ROC_AUC.Why doing like this is that the lost function of regression is large class sensitive.So the user need adjust sample weights.Some index like KS or ROC_AUC,their calculate way is non-sensitive in unbalanced sample situation,so the user need not adjust sample weights unless the user thinks that the loss penalty between samples is different.  
-note:Although the user set measure='KS' or 'ROC_AUC' to measure performance and pick features,but the MutliProcessMStepRegression.LogisticReg is still large class sensitive,due to the base algorithm is standard logistic regression yet.  
+note:Although the user set measure='KS' or 'ROC_AUC' to measure performance and pick features,but the MultiProcessMStepRegression.LogisticReg is still large class sensitive,due to the base algorithm is standard logistic regression yet.  
  
 measure:str ks(default) | accuracy | roc_auc | balanced_accuracy | average_precision  
 Performance evaluate function.The y_true,y_hat and measure_weight will be put into measure function automatically and the other parameters will be put into measure function with kw_measure_args  
