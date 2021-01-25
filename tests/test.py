@@ -4,8 +4,7 @@ Created on Fri Dec 25 11:16:25 2020
 
 @author: wangwenhao
 """
-import sys
-sys.path.append('../')
+
 import MultiProcessMStepRegression as mpmr
 from sklearn.datasets import make_classification,make_regression
 import pandas as pd
