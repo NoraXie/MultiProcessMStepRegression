@@ -1,5 +1,5 @@
 # 安装（Install）
-pip install MutliProcessMStepRegression
+pip install MultiProcessMStepRegression
 # 功能描述（Function Description）
 一个python版本的逐步回归，提供了逐步逻辑回归和逐步线性回归  
 在添加特征和删除特征时使用多进程来并行计算来决定每个特征是否应该加入或删除模型  
